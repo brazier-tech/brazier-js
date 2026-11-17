@@ -19,6 +19,6 @@
       "zustand/*": ["./src/*.ts"]
     }
   },
-  "include": ["packages/**/*", "tests/**/*"],
+  "include": ["packages/**/*", "tests/**/*", "vitest.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

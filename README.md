@@ -1,17 +1,17 @@
-# Brazier Frontend Ecosystem (Design Document)
+# brazier Frontend Ecosystem (Design Document)
 
 ## Architecture and Design Specification
 
 **Target technologies:** TypeScript, JavaScript, React.  
-**Intended audience:** Brazier contributors and frontend SDK developers
+**Intended audience:** brazier contributors and frontend SDK developers
 
 ---
 
 ## 1. Purpose and objectives
 
-The purpose of the Brazier Frontend Ecosystem is to provide a unified collection of JavaScript and TypeScript libraries for interacting with applications built using the Brazier C++ framework.
+The purpose of the brazier Frontend Ecosystem is to provide a unified collection of JavaScript and TypeScript libraries for interacting with applications built using the brazier C++ framework.
 
-The ecosystem should reduce the amount of repetitive code required to communicate with Brazier backends while providing developers with a consistent API for HTTP communication, asynchronous state management, error handling and real-time communication.
+The ecosystem should reduce the amount of repetitive code required to communicate with brazier backends while providing developers with a consistent API for HTTP communication, asynchronous state management, error handling and real-time communication.
 
 ### 1.1. Primary objectives
 
@@ -20,7 +20,7 @@ The ecosystem should reduce the amount of repetitive code required to communicat
 - Offer React hooks and context providers for convenient application integration.
 - Provide predictable and consistent error handling.
 - Support TypeScript throughout the ecosystem.
-- Integrate with Brazier's existing HTTP, HTTPS and WebSocket capabilities.
+- Integrate with brazier's existing HTTP, HTTPS and WebSocket capabilities.
 - Allow the ecosystem to evolve alongside the backend framework without creating unnecessary dependencies between them.
 
 ### 1.2. Design principles
@@ -40,7 +40,7 @@ The ecosystem should initially consist of two primary packages, with additional 
 
 ### 2.1. `@brazier/client`
 
-**Purpose:** Provide the fundamental interface for communicating with Brazier-powered HTTP APIs.
+**Purpose:** Provide the fundamental interface for communicating with brazier-powered HTTP APIs.
 
 This package is responsible for all HTTP communication and should be completely independent of React. It provides a centralised implementation of request construction, transmission, response processing and error handling.
 
@@ -109,7 +109,7 @@ The client must:
 - The library must not disable TLS verification.
 - Authentication secrets must not be embedded in the distributed frontend bundle.
 - Browser cross-origin restrictions remain applicable.
-- The client must not assume that every Brazier application follows an identical response structure.
+- The client must not assume that every brazier application follows an identical response structure.
 
 The client should use the Fetch API by default rather than introducing an additional HTTP transport dependency.
 
@@ -127,7 +127,7 @@ It should use TanStack Query as its underlying server-state management solution 
 
 | Feature            | Description                                                                 
 | ------------------ | - |
-| Context provider   | Makes the configured Brazier client available throughout the component tree |
+| Context provider   | Makes the configured brazier client available throughout the component tree |
 | Query hooks        | Fetch and maintain server-side data                                         |
 | Mutation hooks     | Execute operations that modify server state                                 |
 | Loading states     | Expose request and mutation states                                          |
@@ -172,7 +172,7 @@ const { data, error, isLoading, refetch } = useBrazierQuery<User[]>({
 });
 ```
 
-The hook should expose the standard TanStack Query functionality while supplying the configured Brazier client automatically.
+The hook should expose the standard TanStack Query functionality while supplying the configured brazier client automatically.
 
 #### Mutation hooks
 
@@ -206,7 +206,7 @@ The developer should be able to customise mutation behaviour, including success 
 #### Restrictions and considerations
 
 - Hooks must follow React's Rules of Hooks.
-- The package must not depend on the internal implementation of the Brazier C++ framework.
+- The package must not depend on the internal implementation of the brazier C++ framework.
 - The package must not maintain a second independent query cache.
 - Request cancellation must not be confused with successful completion.
 - Cache invalidation should be configurable rather than automatically invalidating every query.
@@ -216,9 +216,9 @@ The developer should be able to customise mutation behaviour, including success 
 
 ### 2.3. `@brazier/realtime` — future extension
 
-**Purpose:** Provide a unified interface for communicating with Brazier WebSocket endpoints.
+**Purpose:** Provide a unified interface for communicating with brazier WebSocket endpoints.
 
-Brazier already documents WebSocket routing and session management. A dedicated JavaScript package could expose this functionality to frontend applications.
+brazier already documents WebSocket routing and session management. A dedicated JavaScript package could expose this functionality to frontend applications.
 
 #### Features
 
@@ -276,7 +276,7 @@ This is potentially one of the ecosystem's most valuable long-term features.
 
 Instead of manually declaring interfaces in the frontend, developers could generate them from the backend's API contract.
 
-For example, a Brazier backend could eventually expose an OpenAPI specification describing its endpoints, request parameters, request bodies, response structures and status codes.
+For example, a brazier backend could eventually expose an OpenAPI specification describing its endpoints, request parameters, request bodies, response structures and status codes.
 
 A code-generation tool could consume this specification and generate TypeScript definitions.
 
@@ -309,7 +309,7 @@ Generated endpoint definitions could then be consumed by `@brazier/react`.
 
 #### Considerations
 
-- Brazier's current route declarations and handler examples do not, by themselves, provide enough information to infer every request and response type.
+- brazier's current route declarations and handler examples do not, by themselves, provide enough information to infer every request and response type.
 - Route registration must eventually be supplemented with explicit schema metadata or another reliable contract-generation mechanism.
 - The generator must never invent types based solely on endpoint names or assumptions about handler implementations.
 - This package should be considered a separate development milestone, not a requirement for the initial SDK.
@@ -328,8 +328,8 @@ The following describes the expected lifecycle of a normal HTTP request.
 4. If a network request is required, the hook invokes the configured query function.
 5. The query function calls the appropriate method on `BrazierClient`.
 6. The client constructs the request and applies configuration, headers and serialisation.
-7. The Fetch API sends the request to the Brazier backend.
-8. The Brazier server receives the request and passes it through its middleware and routing system.
+7. The Fetch API sends the request to the brazier backend.
+8. The brazier server receives the request and passes it through its middleware and routing system.
 9. The appropriate controller or handler executes the requested operation.
 10. The backend produces an HTTP response.
 11. The client parses the response and determines whether it represents success or failure.
@@ -341,7 +341,7 @@ The following describes the expected lifecycle of a normal HTTP request.
 
 The frontend SDK must not replace backend functionality.
 
-The Brazier backend remains authoritative for:
+The brazier backend remains authoritative for:
 - Route resolution.
 - Authentication.
 - Authorisation.
@@ -438,7 +438,7 @@ This area deserves particular attention because consistency between backend and 
 
 The initial client should support ordinary HTTP response semantics.
 
-It should not require all Brazier endpoints to return a particular JSON envelope.
+It should not require all brazier endpoints to return a particular JSON envelope.
 
 For example, the following should all be valid responses:
 
@@ -498,7 +498,7 @@ Intentional cancellation should normally remain distinguishable from genuine req
 
 ### 5.3. Future backend response standard
 
-It may be worthwhile to introduce a standard response convention across Brazier applications.
+It may be worthwhile to introduce a standard response convention across brazier applications.
 
 For instance:
 
@@ -560,9 +560,9 @@ In particular, it should not silently persist sensitive tokens in localStorage.
 
 ### 6.1. CORS
 
-Since React applications may be hosted separately from Brazier backends, proper CORS configuration is essential. The backend must allow the appropriate frontend origins, methods and headers. Credentialed cross-origin requests require explicit allowed origins rather than `Access-Control-Allow-Origin: *`. This is particularly important for cookie-based authentication.
+Since React applications may be hosted separately from brazier backends, proper CORS configuration is essential. The backend must allow the appropriate frontend origins, methods and headers. Credentialed cross-origin requests require explicit allowed origins rather than `Access-Control-Allow-Origin: *`. This is particularly important for cookie-based authentication.
 
-Brazier's current public README includes a CORS example combining a wildcard origin with credential support. That configuration must be reviewed before being used for credentialed browser requests.
+brazier's current public README includes a CORS example combining a wildcard origin with credential support. That configuration must be reviewed before being used for credentialed browser requests.
 
 See: [MDN CORS documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS).
 
@@ -590,7 +590,7 @@ When using cookies:
 
 Caching should be delegated to TanStack Query.
 
-The Brazier ecosystem should provide convenient integration rather than introducing its own cache implementation.
+The brazier ecosystem should provide convenient integration rather than introducing its own cache implementation.
 
 This offers:
 
@@ -764,12 +764,12 @@ Development should be incremental. The project should establish a reliable found
 - [ ] Define endpoint declaration conventions.
 - [ ] Establish backend/frontend error-handling conventions.
 - [ ] Review CORS configuration.
-- [ ] Create a complete Brazier backend example.
+- [ ] Create a complete brazier backend example.
 - [ ] Create a matching React frontend.
 - [ ] Document authentication integration.
 - [ ] Add integration tests.
 
-**Completion criterion:** A new developer can build a small full-stack application using Brazier and its frontend SDK by following the official documentation.
+**Completion criterion:** A new developer can build a small full-stack application using brazier and its frontend SDK by following the official documentation.
 
 ### Phase 4 — Real-time communication
 
@@ -783,7 +783,7 @@ Development should be incremental. The project should establish a reliable found
 - [ ] Connection lifecycle hooks.
 - [ ] Integration tests.
 
-**Completion criterion:** A frontend application can communicate with Brazier WebSocket endpoints through a consistent API.
+**Completion criterion:** A frontend application can communicate with brazier WebSocket endpoints through a consistent API.
 
 ### Phase 5 — API code generation
 
@@ -802,7 +802,7 @@ Development should be incremental. The project should establish a reliable found
 
 ## 11. Testing strategy
 
-The ecosystem should have independent tests for each package, alongside integration tests involving an actual Brazier backend.
+The ecosystem should have independent tests for each package, alongside integration tests involving an actual brazier backend.
 
 ### Client tests
 
@@ -835,9 +835,9 @@ Test:
 
 Test complete interactions between:
 
-- `@brazier/client` and a Brazier HTTP server.
-- `@brazier/react` and a Brazier HTTP server.
-- `@brazier/realtime` and a Brazier WebSocket server.
+- `@brazier/client` and a brazier HTTP server.
+- `@brazier/react` and a brazier HTTP server.
+- `@brazier/realtime` and a brazier WebSocket server.
 
 Mocked requests should complement, not replace, genuine backend integration tests.
 
@@ -849,7 +849,7 @@ The frontend ecosystem should not attempt to:
 
 1. Replace React or provide a general-purpose UI component library.
 2. Replace TanStack Query with an entirely new caching implementation.
-3. Replace the Brazier backend's routing or middleware systems.
+3. Replace the brazier backend's routing or middleware systems.
 4. Implement database access from the browser.
 5. Make frontend TypeScript types a substitute for backend validation.
 6. Force applications to use a particular authentication system.
@@ -867,7 +867,7 @@ The recommended initial scope is deliberately small:
 
 **Build `@brazier/client` and `@brazier/react` first.**
 
-The client provides a stable communication foundation. The React package makes that foundation convenient to use in frontend applications. TanStack Query should handle asynchronous server state, while Brazier's backend remains responsible for all server-side processing and security. Real-time communication and API code generation should be developed once the initial HTTP integration is stable.
+The client provides a stable communication foundation. The React package makes that foundation convenient to use in frontend applications. TanStack Query should handle asynchronous server state, while brazier's backend remains responsible for all server-side processing and security. Real-time communication and API code generation should be developed once the initial HTTP integration is stable.
 
 There are also two backend-level considerations that should be addressed alongside development:
 
@@ -876,7 +876,7 @@ There are also two backend-level considerations that should be addressed alongsi
 
 ### Proposed end state
 
-A developer should eventually be able to create a complete Brazier-powered application using an experience similar to:
+A developer should eventually be able to create a complete brazier-powered application using an experience similar to:
 
 ```jsx
 import { createBrazierClient } from "@brazier/client";
@@ -928,6 +928,6 @@ function App() {
 }
 ```
 
-The objective is not to hide HTTP or make developers learn an entirely new paradigm. It is to make interacting with Brazier applications feel consistent, straightforward and predictable.
+The objective is not to hide HTTP or make developers learn an entirely new paradigm. It is to make interacting with brazier applications feel consistent, straightforward and predictable.
 
-**The frontend ecosystem should make Brazier easier to adopt without making Brazier more complicated.**
+**The frontend ecosystem should make brazier easier to adopt without making brazier more complicated.**
